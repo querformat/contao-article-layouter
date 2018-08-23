@@ -10,5 +10,9 @@ Dazu gibt es im Contao in der Navigation unter Layout den Punkt "Artikel Layouts
 
 Noch nicht veröffentlichte Article Layouts können über die Frontendvorschau getestet werden bevor sie für den produktiven Einsatz dem Redakteuren zur Verfügung gestellt werden.
 
-**Version 1.0**
+**Version 1.0.1**
+- Labels und Descriptions angepasst
+- Bugfixes
+
+**Version 1.0.0**
 - Version für den ersten produktiven Einsatz
