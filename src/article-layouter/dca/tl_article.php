@@ -3,7 +3,7 @@ $GLOBALS['TL_DCA']['tl_article']['palettes']['default'] = str_replace('{template
 
 $GLOBALS['TL_DCA']['tl_article']['fields']['articleLayoutsSelect'] = array
 (
-    'label'                   => array('Artikel Layout','©querformat GmbH & Co. KG'),
+    'label'                   => &$GLOBALS['TL_LANG']['tl_article']['articleLayoutsSelect'],
     'filter'                  => true,
     'inputType'               => 'select',
     'options_callback'        => array('querformat\\ArticleLayouter', 'getLayoutOptions'),

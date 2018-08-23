@@ -33,9 +33,12 @@ class ArticleLayouter extends \Frontend {
     public function getLayoutOptions(){
         $arrOptions = [];
         $objLayouts = ArticleLayoutsModel::findAll(array('order' => 'fallback DESC, title ASC'));
-        while ($objLayouts->next())
-        {
-         $arrOptions[$objLayouts->id] = $objLayouts->title.($objLayouts->published==1?'':' (inaktiv)');
+        if($objLayouts) {
+            while ($objLayouts->next()) {
+                $arrOptions[$objLayouts->id] = $objLayouts->title . ($objLayouts->published == 1 ? '' : ' (inaktiv)');
+            }
+        }else{
+            $arrOptions = array('Legen Sie zuerst ein Layout an');
         }
         return $arrOptions;
     }
