@@ -22,15 +22,16 @@ $GLOBALS['TL_DCA']['tl_article_layouts'] = array
     (
         'sorting' => array
         (
-            'mode' => 0,
-            'flag' => 11,
+            'mode' => 1,
             'fields' => array('title'),
+            'flag' => 1,
             'panelLayout' => 'filter,search,limit',
+            'disableGrouping' => true,
         ),
         'label' => array
         (
-            'fields' => array('title','fallback'),
-            'format' => '',
+            'fields' => array('title'),
+            'format' => '%s',
             'label_callback' => array('tl_article_layouts', 'setListLabels')
         ),
         'global_operations' => array
@@ -40,30 +41,35 @@ $GLOBALS['TL_DCA']['tl_article_layouts'] = array
                 'label' => &$GLOBALS['TL_LANG']['MSC']['all'],
                 'href' => 'act=select',
                 'class' => 'header_edit_all',
-                'attributes' => 'onclick="Backend.getScrollOffset();"'
+                'attributes' => 'onclick="Backend.getScrollOffset();" accesskey="e"'
             )
         ),
         'operations' => array
         (
             'edit' => array
             (
-                'label'               => &$GLOBALS['TL_LANG']['tl_dma_eg']['edit'],
+                'label'               => &$GLOBALS['TL_LANG']['tl_article_layouts']['edit'],
                 'href'                => 'act=edit',
-                'icon'                => 'edit.gif',
-                'attributes'          => 'class="edit"'
+                'icon'                => 'edit.svg',
+            ),
+            'copy' => array
+            (
+                'label'               => &$GLOBALS['TL_LANG']['tl_article_layouts']['copy'],
+                'href'                => 'act=copy',
+                'icon'                => 'copy.svg'
             ),
             'delete' => array
             (
-                'label' => &$GLOBALS['TL_LANG']['tl_dma_eg_fields']['delete'],
+                'label' => &$GLOBALS['TL_LANG']['tl_article_layouts']['delete'],
                 'href' => 'act=delete',
-                'icon' => 'delete.gif',
-                'attributes' => 'onclick="if (!confirm(\'' . $GLOBALS['TL_LANG']['MSC']['deleteConfirm'] . '\')) return false; Backend.getScrollOffset();"'
+                'icon' => 'delete.svg',
+                'attributes' => 'onclick="if (!confirm(\'' . $GLOBALS['TL_LANG']['tl_article_layouts']['deleteConfirm'] . '\')) return false; Backend.getScrollOffset();"'
             ),
             'show' => array
             (
-                'label' => &$GLOBALS['TL_LANG']['tl_dma_eg_fields']['show'],
+                'label' => &$GLOBALS['TL_LANG']['tl_article_layouts']['show'],
                 'href' => 'act=show',
-                'icon' => 'show.gif'
+                'icon' => 'show.svg'
             )
         )
     ),
@@ -91,11 +97,12 @@ $GLOBALS['TL_DCA']['tl_article_layouts'] = array
         ),
         'title' => array
         (
-            'label' => &$GLOBALS['TL_LANG']['tl_article_layouts']['title'],
-            'inputType' => 'text',
-            'exclude' => true,
-            'eval' => array('mandatory'=>true,'rgxp' => 'alnum', 'doNotCopy' => true, 'maxlength' => 128),
-            'sql' => "varchar(255) NOT NULL default ''"
+            'label'                   => &$GLOBALS['TL_LANG']['tl_article_layouts']['title'],
+            'exclude'                 => true,
+            'search'                  => true,
+            'inputType'               => 'text',
+            'eval'                    => array('mandatory'=>true),
+            'sql'                     => "varchar(255) NOT NULL default ''"
         ),
         'css_classes' => array
         (
@@ -114,7 +121,6 @@ $GLOBALS['TL_DCA']['tl_article_layouts'] = array
         'fallback' => array
         (
             'label'                   => &$GLOBALS['TL_LANG']['tl_article_layouts']['default'],
-            'filter'                  => true,
             'inputType'               => 'checkbox',
             'save_callback'           => array(array('tl_article_layouts', 'checkFallbacks')),
             'sql'                     => "char(1) NOT NULL default ''",
@@ -123,10 +129,7 @@ $GLOBALS['TL_DCA']['tl_article_layouts'] = array
         (
             'label'                   => &$GLOBALS['TL_LANG']['tl_article_layouts']['published'],
             'exclude'                 => true,
-            'filter'                  => true,
-            'flag'                    => 1,
             'inputType'               => 'checkbox',
-            'eval'                    => array('doNotCopy'=>true),
             'sql'                     => "char(1) NOT NULL default 1"
         ),
     )
