@@ -7,7 +7,7 @@ $GLOBALS['TL_DCA']['tl_article_layouts'] = array
     (
         'dataContainer' => 'Table',
         'enableVersioning' => true,
-        'switchToEdit'      => true,
+        'switchToEdit' => true,
         'sql' => array
         (
             'keys' => array
@@ -48,15 +48,15 @@ $GLOBALS['TL_DCA']['tl_article_layouts'] = array
         (
             'edit' => array
             (
-                'label'               => &$GLOBALS['TL_LANG']['tl_article_layouts']['edit'],
-                'href'                => 'act=edit',
-                'icon'                => 'edit.svg',
+                'label' => &$GLOBALS['TL_LANG']['tl_article_layouts']['edit'],
+                'href' => 'act=edit',
+                'icon' => 'edit.svg',
             ),
             'copy' => array
             (
-                'label'               => &$GLOBALS['TL_LANG']['tl_article_layouts']['copy'],
-                'href'                => 'act=copy',
-                'icon'                => 'copy.svg'
+                'label' => &$GLOBALS['TL_LANG']['tl_article_layouts']['copy'],
+                'href' => 'act=copy',
+                'icon' => 'copy.svg'
             ),
             'delete' => array
             (
@@ -77,9 +77,14 @@ $GLOBALS['TL_DCA']['tl_article_layouts'] = array
 // Palettes
     'palettes' => array
     (
-        'default' => '{Name},title,css_classes,use_inner,fallback,published',
+        '__selector__' => array('use_inner'),
+        'default' => 'title,css_classes;use_inner;fallback;published',
     ),
-
+    // Subpalettes
+    'subpalettes' => array
+    (
+        'use_inner' => 'css_classes_inner'
+    ),
 // Fields
     'fields' => array
     (
@@ -97,40 +102,64 @@ $GLOBALS['TL_DCA']['tl_article_layouts'] = array
         ),
         'title' => array
         (
-            'label'                   => &$GLOBALS['TL_LANG']['tl_article_layouts']['title'],
-            'exclude'                 => true,
-            'search'                  => true,
-            'inputType'               => 'text',
-            'eval'                    => array('mandatory'=>true),
-            'sql'                     => "varchar(255) NOT NULL default ''"
+            'label' => &$GLOBALS['TL_LANG']['tl_article_layouts']['title'],
+            'exclude' => true,
+            'search' => true,
+            'inputType' => 'text',
+            'eval' => array(
+                'mandatory' => true,
+                'tl_class' => 'w50'
+            ),
+            'sql' => "varchar(255) NOT NULL default ''"
         ),
         'css_classes' => array
         (
-            'label'                   => &$GLOBALS['TL_LANG']['tl_article_layouts']['css_classes'],
-            'search'                  => true,
-            'inputType'               => 'text',
-            'sql'                     => "varchar(255) NOT NULL default ''"
+            'label' => &$GLOBALS['TL_LANG']['tl_article_layouts']['css_classes'],
+            'search' => true,
+            'inputType' => 'text',
+            'eval' => array(
+                'tl_class' => 'clr w50'
+            ),
+            'sql' => "varchar(255) NOT NULL default ''"
         ),
         'use_inner' => array
         (
-            'label'                   => &$GLOBALS['TL_LANG']['tl_article_layouts']['use_inner'],
-            'filter'                  => true,
-            'inputType'               => 'checkbox',
-            'sql'                     => "char(1) NOT NULL default ''"
+            'label' => &$GLOBALS['TL_LANG']['tl_article_layouts']['use_inner'],
+            'filter' => true,
+            'exclude' => true,
+            'inputType' => 'checkbox',
+            'eval' => array(
+                'submitOnChange' => true,
+                'tl_class' => 'clr w50'
+            ),
+            'sql' => "char(1) NOT NULL default ''"
+        ),
+        'css_classes_inner' => array
+        (
+            'label' => &$GLOBALS['TL_LANG']['tl_article_layouts']['css_classes_inner'],
+            'search' => true,
+            'inputType' => 'text',
+            'eval' => array(
+                'tl_class' => 'clr w50'
+            ),
+            'sql' => "varchar(255) NOT NULL default ''"
         ),
         'fallback' => array
         (
-            'label'                   => &$GLOBALS['TL_LANG']['tl_article_layouts']['default'],
-            'inputType'               => 'checkbox',
-            'save_callback'           => array(array('tl_article_layouts', 'checkFallbacks')),
-            'sql'                     => "char(1) NOT NULL default ''",
+            'label' => &$GLOBALS['TL_LANG']['tl_article_layouts']['default'],
+            'inputType' => 'checkbox',
+            'eval' => array(
+                'tl_class' => 'clr'
+            ),
+            'save_callback' => array(array('tl_article_layouts', 'checkFallbacks')),
+            'sql' => "char(1) NOT NULL default ''",
         ),
         'published' => array
         (
-            'label'                   => &$GLOBALS['TL_LANG']['tl_article_layouts']['published'],
-            'exclude'                 => true,
-            'inputType'               => 'checkbox',
-            'sql'                     => "char(1) NOT NULL default 1"
+            'label' => &$GLOBALS['TL_LANG']['tl_article_layouts']['published'],
+            'exclude' => true,
+            'inputType' => 'checkbox',
+            'sql' => "char(1) NOT NULL default 1"
         ),
     )
 );
@@ -149,13 +178,15 @@ class tl_article_layouts extends Backend
      * @param $label
      * @return string
      */
-    public function setListLabels($row, $label){
-        $newLabel = $row['title'] . ($row['fallback'] == 1?' <span style="opacity: .6;">(default)</span>':'');
-        if($row['published'] == 0){
-            $newLabel = '<span style="opacity: .5">'.$newLabel.'</span>';
+    public function setListLabels($row, $label)
+    {
+        $newLabel = $row['title'] . ($row['fallback'] == 1 ? ' <span style="opacity: .6;">(default)</span>' : '');
+        if ($row['published'] == 0) {
+            $newLabel = '<span style="opacity: .5">' . $newLabel . '</span>';
         }
         return $newLabel;
     }
+
     /**
      * save_callback: Wird beim Abschicken eines Feldes ausgeführt.
      * @param $varValue
@@ -165,8 +196,7 @@ class tl_article_layouts extends Backend
     public function checkFallbacks($varValue, DataContainer $dc)
     {
         // unset fallback in all other article_layout options
-        if ($varValue == 1)
-        {
+        if ($varValue == 1) {
             $this->Database->prepare("UPDATE tl_article_layouts %s WHERE id!=?")->set(array('fallback' => 0))->execute($dc->id);
         }
         return $varValue;

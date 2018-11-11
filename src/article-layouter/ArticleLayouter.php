@@ -24,6 +24,7 @@ class ArticleLayouter extends \Frontend {
             if($condition) {
                 $objTemplate->class = $objTemplate->class . ' ' . $objArticleLayout->css_classes;
                 $objTemplate->use_inner = $objArticleLayout->use_inner;
+                $objTemplate->css_classes_inner = $objArticleLayout->css_classes_inner;
 
                 $objTemplate->setName('mod_articleLayouter');
             }
