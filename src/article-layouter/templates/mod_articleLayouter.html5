@@ -2,7 +2,7 @@
 <?php $this->block('content'); ?>
 
 <?php if($this->use_inner == 1): ?>
-    <div class="mod_article__inside">
+    <div class="mod_article__inside <?= $this->css_classes_inner ?>">
 <?php endif; ?>
 
     <?php $this->parent(); ?>
