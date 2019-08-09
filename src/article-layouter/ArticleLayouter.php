@@ -15,13 +15,12 @@ class ArticleLayouter extends \Frontend {
     public function setTemplate($objTemplate){
         if ($objTemplate->getName() == 'mod_article')
         {
-            $condition = (
-                BE_USER_LOGGED_IN ?
-                    ($objArticleLayout = \querformat\ArticleLayoutsModel::findById($objTemplate->articleLayoutsSelect)) :
-                    ($objArticleLayout = \querformat\ArticleLayoutsModel::findOneBy(array('id=?','published=1'),array($objTemplate->articleLayoutsSelect,1)))
-            );
+            # issue: https://github.com/querformat/contao-article-layouter/issues/5
+            # solution: choose default article layout if no article layout is choosen or not existend
+            if(!$objTemplate->articleLayoutsSelect || !$objArticleLayout = \querformat\ArticleLayoutsModel::findBy(array('id=?'),array($objTemplate->articleLayoutsSelect)))
+                $objArticleLayout = \querformat\ArticleLayoutsModel::findOneBy(array('fallback=?'),array(1));
 
-            if($condition) {
+            if($objArticleLayout) {
                 $objTemplate->class = $objTemplate->class . ' ' . $objArticleLayout->css_classes;
                 $objTemplate->use_inner = $objArticleLayout->use_inner;
                 $objTemplate->css_classes_inner = $objArticleLayout->css_classes_inner;
@@ -33,7 +32,7 @@ class ArticleLayouter extends \Frontend {
 
     public function getLayoutOptions(){
         $arrOptions = [];
-        $objLayouts = ArticleLayoutsModel::findAll(array('order' => 'fallback DESC, title ASC'));
+        $objLayouts = \querformat\ArticleLayoutsModel::findAll(array('order' => 'fallback DESC, title ASC'));
         if($objLayouts) {
             while ($objLayouts->next()) {
                 $arrOptions[$objLayouts->id] = $objLayouts->title . ($objLayouts->published == 1 ? '' : ' (inaktiv)');

@@ -25,7 +25,7 @@ $GLOBALS['TL_DCA']['tl_article_layouts'] = array
             'mode' => 1,
             'fields' => array('title'),
             'flag' => 1,
-            'panelLayout' => 'filter,search,limit',
+            'panelLayout' => 'filter;search;',
             'disableGrouping' => true,
         ),
         'label' => array
@@ -78,7 +78,7 @@ $GLOBALS['TL_DCA']['tl_article_layouts'] = array
     'palettes' => array
     (
         '__selector__' => array('use_inner'),
-        'default' => 'title,css_classes;use_inner;fallback;published',
+        'default' => 'title,css_classes;use_inner;fallback',
     ),
     // Subpalettes
     'subpalettes' => array
@@ -137,7 +137,6 @@ $GLOBALS['TL_DCA']['tl_article_layouts'] = array
         'css_classes_inner' => array
         (
             'label' => &$GLOBALS['TL_LANG']['tl_article_layouts']['css_classes_inner'],
-            'search' => true,
             'inputType' => 'text',
             'eval' => array(
                 'tl_class' => 'clr w50'
@@ -180,9 +179,9 @@ class tl_article_layouts extends Backend
      */
     public function setListLabels($row, $label)
     {
-        $newLabel = $row['title'] . ($row['fallback'] == 1 ? ' <span style="opacity: .6;">(default)</span>' : '');
+        $newLabel = $row['title'] . ($row['fallback'] == 1 ? ' <span style="color: #79cc5c;">(Standardauswahl)</span>' : '');
         if ($row['published'] == 0) {
-            $newLabel = '<span style="opacity: .5">' . $newLabel . '</span>';
+            $newLabel = '<span style="opacity: .3">' . $newLabel . '</span>';
         }
         return $newLabel;
     }
